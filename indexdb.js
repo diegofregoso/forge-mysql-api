@@ -14,7 +14,7 @@ app.get('/polizas', async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error consultando polizas' });
+    res.status(500).json({ error: 'Error consultando POLIZAS' });
   }
 });
 
@@ -23,7 +23,7 @@ app.get('/polizas/:numeroPoliza', async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      'SELECT * FROM polizas WHERE numero_poliza = ?',
+      'SELECT * FROM POLIZAS WHERE numero_poliza = ?',
       [numeroPoliza]
     );
 
