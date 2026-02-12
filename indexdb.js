@@ -10,7 +10,7 @@ const pool = mysql.createPool({
 
 app.get('/polizas', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM polizas');
+    const [rows] = await pool.query('SELECT * FROM POLIZAS');
     res.json(rows);
   } catch (err) {
     console.error(err);
