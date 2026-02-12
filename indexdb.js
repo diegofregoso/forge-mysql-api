@@ -9,8 +9,26 @@ const pool = mysql.createPool({
 });
 
 app.get('/polizas', async (req, res) => {
+  const { q } = req.query;
+
   try {
-    const [rows] = await pool.query('SELECT * FROM POLIZAS');
+    let query = 'SELECT * FROM POLIZAS';
+    let params = [];
+
+    if (q && q.trim() !== '') {
+      query += `
+        WHERE
+          numero_poliza LIKE ?
+          OR nombre_asegurado LIKE ?
+          OR seccion LIKE ?
+          OR linea LIKE ?
+          OR vigencia LIKE ?
+      `;
+      const like = `%${q}%`;
+      params = [like, like, like, like, like];
+    }
+
+    const [rows] = await pool.query(query, params);
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -18,24 +36,7 @@ app.get('/polizas', async (req, res) => {
   }
 });
 
-app.get('/polizas/:numeroPoliza', async (req, res) => {
-  const { numeroPoliza } = req.params;
-
-  try {
-    const [rows] = await pool.query(
-      'SELECT * FROM POLIZAS WHERE numero_poliza = ?',
-      [numeroPoliza]
-    );
-
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error consultando póliza' });
-  }
-});
-
 const PORT = process.env.PORT || 3001;
-
 app.listen(PORT, () => {
   console.log(`API escuchando en puerto ${PORT}`);
 });
