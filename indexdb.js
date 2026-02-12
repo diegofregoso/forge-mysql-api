@@ -10,11 +10,27 @@ const pool = mysql.createPool({
 
 app.get('/polizas', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM POLIZAS');
+    const [rows] = await pool.query('SELECT * FROM polizas');
     res.json(rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error consultando polizas' });
+  }
+});
+
+app.get('/polizas/:numeroPoliza', async (req, res) => {
+  const { numeroPoliza } = req.params;
+
+  try {
+    const [rows] = await pool.query(
+      'SELECT * FROM polizas WHERE numero_poliza = ?',
+      [numeroPoliza]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error consultando póliza' });
   }
 });
 
